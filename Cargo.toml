@@ -1,0 +1,11 @@
+[package]
+name = "shapdf"
+description = "Create Shapes into PDF"
+repository = "https://github.com/Teddy-van-Jerry/shapdf"
+authors = ["Teddy van Jerry <me@teddy-van-jerry.org>"]
+version = "0.1.0"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+edition = "2021"
+
+[dependencies]
