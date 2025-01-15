@@ -4,6 +4,7 @@ use std::io::Write;
 use std::path;
 use std::result::Result;
 
+pub use crate::shapes::*;
 pub use crate::units::*;
 
 const N_OBJ_RESERVED: usize = 2; // First two objects are reserved for pages.
@@ -17,23 +18,6 @@ pub struct Generator {
     pre_offset: usize,      // Offset before the first page
     content_stream: String, // Content stream to accumulate drawing commands
     pages: Vec<usize>,      // Page object numbers
-}
-
-#[derive(Debug)]
-pub enum LineCap {
-    Butt,
-    Round,
-    Square,
-}
-
-impl LineCap {
-    fn to_int(&self) -> i32 {
-        match self {
-            LineCap::Butt => 0,
-            LineCap::Round => 1,
-            LineCap::Square => 2,
-        }
-    }
 }
 
 impl Generator {
@@ -199,17 +183,18 @@ impl Generator {
     }
 
     pub fn add_circle<L: Length>(&mut self, cx: L, cy: L, radius: L) {
-        self.content_stream.push_str(&format!(
-            "{} w\n1 J\n{} {} m\n{} {} l\nS\n",
-            radius.to_points() * 2.0,
-            cx.to_points(),
-            cy.to_points(),
-            cx.to_points(),
-            cy.to_points()
-        ));
+        // self.content_stream.push_str(&format!(
+        //     "{} w\n1 J\n{} {} m\n{} {} l\nS\n",
+        //     radius.to_points() * 2.0,
+        //     cx.to_points(),
+        //     cy.to_points(),
+        //     cx.to_points(),
+        //     cy.to_points()
+        // ));
+        self.add_line(cx, cy, cx, cy, radius * 2.0, CapType::Round);
     }
 
-    pub fn add_line<L: Length>(&mut self, x1: L, y1: L, x2: L, y2: L, width: L, cap_type: LineCap) {
+    pub fn add_line<L: Length>(&mut self, x1: L, y1: L, x2: L, y2: L, width: L, cap_type: CapType) {
         self.content_stream.push_str(&format!(
             "{} w\n{} J\n{} {} m\n{} {} l\nS\n",
             width.to_points(),
@@ -219,6 +204,18 @@ impl Generator {
             x2.to_points(),
             y2.to_points()
         ));
+    }
+
+    pub fn line<L: Length>(&mut self, x1: L, y1: L, x2: L, y2: L) -> Shape {
+        Shape {
+            content_stream: Some(&mut self.content_stream),
+            enum_type: ShapeType::Line,
+            x1: Some(x1.to_points()),
+            y1: Some(y1.to_points()),
+            x2: Some(x2.to_points()),
+            y2: Some(y2.to_points()),
+            ..Default::default()
+        }
     }
 
     pub fn add_polygon<L: Length>(&mut self, points: &[(L, L)]) {
