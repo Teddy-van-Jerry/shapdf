@@ -6,12 +6,17 @@ use std::result::Result;
 
 pub use crate::units::*;
 
+const N_OBJ_RESERVED: usize = 2; // First two objects are reserved for pages.
+
 #[derive(Debug)]
 pub struct Generator {
     file_path: path::PathBuf,
     pdf: Vec<u8>,           // PDF binary content
+    pdf_pre: Vec<u8>,       // PDF binary content before the first page
     offsets: Vec<usize>,    // Object offsets for xref
+    pre_offset: usize,      // Offset before the first page
     content_stream: String, // Content stream to accumulate drawing commands
+    pages: Vec<usize>,      // Page object numbers
 }
 
 #[derive(Debug)]
@@ -36,33 +41,74 @@ impl Generator {
         Self {
             file_path,
             pdf: Vec::new(),
-            offsets: Vec::new(),
+            pdf_pre: Vec::new(),
+            offsets: vec![0; N_OBJ_RESERVED], // First two objects are reserved for pages.
+            pre_offset: 0,
             content_stream: String::new(),
+            pages: Vec::new(),
         }
     }
 
     pub fn write_pdf(&mut self) -> Result<(), Box<dyn Error>> {
         self.initialize_pdf();
-        self.add_content();
         self.finalize_pdf();
         let mut file = File::create(&self.file_path)?;
+        file.write_all(&self.pdf_pre)?;
         file.write_all(&self.pdf)?;
         Ok(())
     }
 
     fn initialize_pdf(&mut self) {
-        self.pdf.extend(b"%PDF-1.5\n");
+        // add remaining content
+        self.add_content();
+
+        self.pdf_pre.extend(b"%PDF-1.5\n");
+
+        // Catalog object
+        self.add_pre_object("<< /Type /Catalog /Pages 2 0 R >>", 0);
+
+        // Pages object
+        let pages_kids: String = self
+            .pages
+            .iter()
+            .map(|page| format!("{} 0 R ", page))
+            .collect::<String>()
+            .trim()
+            .to_string();
+        self.add_pre_object(
+            &format!(
+                "<< /Type /Pages /Kids [{}] /Count {} >>",
+                pages_kids,
+                self.pages.len()
+            ),
+            1,
+        );
     }
 
     fn finalize_pdf(&mut self) {
         // Xref table
-        let xref_start = self.pdf.len();
+        let xref_start = self.pdf_pre.len() + self.pdf.len();
         self.pdf.extend(b"xref\n");
         self.pdf
             .extend(format!("0 {}\n0000000000 65535 f \n", self.offsets.len() + 1).as_bytes());
-        for offset in &self.offsets {
-            self.pdf
-                .extend(format!("{:010} 00000 n \n", offset).as_bytes());
+        for (i, offset) in self.offsets.iter().enumerate() {
+            self.pdf.extend(
+                format!(
+                    "{:010} 00000 {} \n",
+                    offset
+                        + if i >= N_OBJ_RESERVED && (*offset > 0 || i == N_OBJ_RESERVED) {
+                            self.pre_offset
+                        } else {
+                            0
+                        },
+                    if *offset == 0 && i > N_OBJ_RESERVED {
+                        'f'
+                    } else {
+                        'n'
+                    }
+                )
+                .as_bytes(),
+            );
         }
 
         // Trailer
@@ -83,6 +129,13 @@ impl Generator {
             .extend(format!("{} 0 obj\n{}\nendobj\n", self.offsets.len(), content).as_bytes());
     }
 
+    fn add_pre_object(&mut self, content: &str, n_obj: usize) {
+        self.offsets[n_obj] = self.pdf_pre.len(); // Track offset
+        self.pdf_pre
+            .extend(format!("{} 0 obj\n{}\nendobj\n", n_obj + 1, content).as_bytes());
+        self.pre_offset = self.pdf_pre.len();
+    }
+
     pub fn add_page_a4(&mut self) {
         self.add_page_with_size(Mm(210.0), Mm(297.0));
     }
@@ -92,17 +145,18 @@ impl Generator {
     }
 
     pub fn add_page_with_size<L: Length>(&mut self, width: L, height: L) {
-        // Catalog object
-        self.add_object("<< /Type /Catalog /Pages 2 0 R >>");
+        if self.pages.len() > 0 {
+            self.add_content(); // Add content for the previous page
+        }
 
-        // Pages object
-        self.add_object(&format!("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"));
+        self.pages.push(self.offsets.len() + 1);
 
         // Page object
         self.add_object(&format!(
-            "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {} {}] /Contents 4 0 R >>",
+            "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {} {}] /Contents {} 0 R >>",
             width.to_points(),
-            height.to_points()
+            height.to_points(),
+            self.offsets.len() + 2
         ));
     }
 
@@ -112,6 +166,7 @@ impl Generator {
             self.content_stream.len(),
             self.content_stream
         ));
+        self.content_stream.clear();
     }
 
     pub fn add_rectangle<L: Length, A: Angle>(

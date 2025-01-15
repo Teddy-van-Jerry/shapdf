@@ -44,9 +44,9 @@ pub trait Angle {
 }
 
 #[derive(Debug)]
-pub struct Degrees(pub f64);
+pub struct Degree(pub f64);
 
-impl Angle for Degrees {
+impl Angle for Degree {
     fn to_degrees(&self) -> f64 {
         self.0
     }
@@ -57,9 +57,9 @@ impl Angle for Degrees {
 }
 
 #[derive(Debug)]
-pub struct Radians(pub f64);
+pub struct Radian(pub f64);
 
-impl Angle for Radians {
+impl Angle for Radian {
     fn to_degrees(&self) -> f64 {
         self.0.to_degrees()
     }
