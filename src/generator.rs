@@ -249,10 +249,8 @@ impl Generator {
         Shape {
             content_stream: Some(&mut self.content_stream),
             enum_type: ShapeType::Rectangle,
-            x: vec![x.to_points()],
-            y: vec![y.to_points()],
-            width: Some(width.to_points()),
-            height: Some(height.to_points()),
+            x: vec![x.to_points(), width.to_points()],
+            y: vec![y.to_points(), height.to_points()],
             ..Default::default()
         }
     }
@@ -285,11 +283,23 @@ impl Generator {
         *DEFAULT_PAGE_HEIGHT.lock().unwrap() = height.to_points();
     }
 
+    pub fn get_default_width() -> Pt {
+        Shape::get_default_width()
+    }
+
     pub fn set_default_width(width: impl Length) {
         Shape::set_default_width(width);
     }
 
     pub fn set_default_cap_type(cap_type: CapType) {
         Shape::set_default_cap_type(cap_type);
+    }
+
+    pub fn set_default_color(color: impl Color) {
+        Shape::set_default_color(color);
+    }
+
+    pub fn set_default_angle(angle: impl Angle) {
+        Shape::set_default_angle(angle);
     }
 }

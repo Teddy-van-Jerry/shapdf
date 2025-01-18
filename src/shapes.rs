@@ -20,6 +20,26 @@ impl CapType {
 }
 
 #[derive(Debug, Clone, Copy)]
+pub enum Anchor {
+    Center,
+    North,
+    South,
+    East,
+    West,
+    NorthEast,
+    NorthWest,
+    SouthEast,
+    SouthWest,
+    Point(f64, f64),
+}
+
+impl Default for Anchor {
+    fn default() -> Self {
+        Anchor::SouthWest
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub enum ShapeType {
     Line,
     Circle,
@@ -41,9 +61,9 @@ pub struct Shape<'a> {
     pub x: Vec<f64>,
     pub y: Vec<f64>,
     pub width: Option<f64>,
-    pub height: Option<f64>,
     pub radius: Option<f64>,
     pub angle: Option<f64>, // angle in radius
+    pub anchor: Option<Anchor>,
     pub cap_type: Option<CapType>,
     pub color: Option<(f64, f64, f64)>,
 }
@@ -53,6 +73,7 @@ static DEFAULT_CAP_TYPE: Lazy<Mutex<CapType>> = Lazy::new(|| CapType::Butt.into(
 static DEFAULT_COLOR: Lazy<Mutex<(f64, f64, f64)>> =
     Lazy::new(|| NamedColor("black").to_rgb().into());
 static DEFAULT_ANGLE: Lazy<Mutex<f64>> = Lazy::new(|| Degree(0.).to_degrees().into());
+static DEFAULT_ANCHOR: Lazy<Mutex<Anchor>> = Lazy::new(|| Anchor::SouthWest.into());
 
 impl<'a> Shape<'a> {
     pub fn draw(&mut self) {
@@ -89,8 +110,22 @@ impl<'a> Shape<'a> {
                     let angle = self.angle.unwrap_or(*DEFAULT_ANGLE.lock().unwrap());
                     let cos_theta = angle.cos();
                     let sin_theta = angle.sin();
-                    let cx = self.x[0] + self.width.unwrap() / 2.0;
-                    let cy = self.y[0] + self.height.unwrap() / 2.0;
+                    let (width, height) = (self.x[1], self.y[1]);
+                    // (cx, cy): rotation center
+                    let (cx, cy) = (self.x[0], self.y[0]);
+                    // (x0, y0): south west corner of the rectangle before rotation
+                    let (x0, y0) = match self.anchor.unwrap_or(*DEFAULT_ANCHOR.lock().unwrap()) {
+                        Anchor::Center => (self.x[0] - width / 2.0, self.y[0] - height / 2.0),
+                        Anchor::North => (self.x[0] - width / 2.0, self.y[0] - height),
+                        Anchor::South => (self.x[0] - width / 2.0, self.y[0]),
+                        Anchor::East => (self.x[0] - width, self.y[0] - height / 2.0),
+                        Anchor::West => (self.x[0], self.y[0] - height / 2.0),
+                        Anchor::NorthEast => (self.x[0] - width, self.y[0] - height),
+                        Anchor::NorthWest => (self.x[0], self.y[0] - height),
+                        Anchor::SouthEast => (self.x[0] - width, self.y[0]),
+                        Anchor::SouthWest => (self.x[0], self.y[0]),
+                        Anchor::Point(px, py) => (px, py),
+                    };
                     let translate_x = cx - cos_theta * cx + sin_theta * cy;
                     let translate_y = cy - sin_theta * cx - cos_theta * cy;
                     content.extend_from_slice(
@@ -102,10 +137,10 @@ impl<'a> Shape<'a> {
                             cos_theta,
                             translate_x,
                             translate_y,
-                            self.x[0],
-                            self.y[0],
-                            self.width.unwrap(),
-                            self.height.unwrap()
+                            x0,
+                            y0,
+                            width,
+                            height
                         )
                         .as_bytes(),
                     );
@@ -126,6 +161,11 @@ impl<'a> Shape<'a> {
         self
     }
 
+    pub fn with_anchor(&mut self, anchor: Anchor) -> &mut Self {
+        self.anchor = Some(anchor);
+        self
+    }
+
     pub fn with_cap_type(&mut self, cap_type: CapType) -> &mut Self {
         self.cap_type = Some(cap_type);
         self
@@ -136,15 +176,44 @@ impl<'a> Shape<'a> {
         self
     }
 
+    pub fn get_default_width() -> Pt {
+        Pt(*DEFAULT_WIDTH.lock().unwrap())
+    }
+
     pub fn set_default_width(width: impl Length) {
         *DEFAULT_WIDTH.lock().unwrap() = width.to_points();
+    }
+
+    pub fn get_default_cap_type() -> CapType {
+        *DEFAULT_CAP_TYPE.lock().unwrap()
     }
 
     pub fn set_default_cap_type(cap_type: CapType) {
         *DEFAULT_CAP_TYPE.lock().unwrap() = cap_type;
     }
 
+    pub fn get_default_color() -> Rgb {
+        let (r, g, b) = *DEFAULT_COLOR.lock().unwrap();
+        Rgb(r, g, b)
+    }
+
     pub fn set_default_color(color: impl Color) {
         *DEFAULT_COLOR.lock().unwrap() = color.to_rgb();
+    }
+
+    pub fn get_default_angle() -> Degree {
+        Degree(*DEFAULT_ANGLE.lock().unwrap())
+    }
+
+    pub fn set_default_angle(angle: impl Angle) {
+        *DEFAULT_ANGLE.lock().unwrap() = angle.to_radians();
+    }
+
+    pub fn get_default_anchor() -> Anchor {
+        *DEFAULT_ANCHOR.lock().unwrap()
+    }
+
+    pub fn set_default_anchor(anchor: Anchor) {
+        *DEFAULT_ANCHOR.lock().unwrap() = anchor;
     }
 }

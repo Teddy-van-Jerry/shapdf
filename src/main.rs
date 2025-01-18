@@ -18,8 +18,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     generator.add_page_letter();
     generator
-        .rectangle(Mm(50.), Mm(180.), Mm(50.), Mm(30.))
-        .with_angle(Degree(45.))
+        .rectangle(Mm(80.), Mm(180.), Mm(50.), Mm(30.))
+        .with_anchor(Anchor::Center)
+        .with_angle(Degree(30.))
+        .draw();
+    generator
+        .circle(Mm(80.), Mm(180.), Mm(1.))
+        .with_color(NamedColor("green"))
         .draw();
     generator.add_page_a4();
     generator.write_pdf()?;
