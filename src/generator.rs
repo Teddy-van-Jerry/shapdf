@@ -1,3 +1,4 @@
+#[cfg(feature = "compress")]
 use flate2::{write::ZlibEncoder, Compression};
 use once_cell::sync::Lazy;
 use std::error::Error;
@@ -42,6 +43,10 @@ impl Generator {
     pub fn write_pdf(&mut self) -> Result<(), Box<dyn Error>> {
         self.initialize_pdf();
         self.finalize_pdf();
+        // create directories if not exist
+        if let Some(dir) = self.file_path.parent() {
+            std::fs::create_dir_all(dir)?;
+        }
         let mut file = File::create(&self.file_path)?;
         file.write_all(&self.pdf_pre)?;
         file.write_all(&self.pdf)?;
