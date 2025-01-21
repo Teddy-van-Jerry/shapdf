@@ -3,9 +3,17 @@ use std::{
     ops::{Add, Mul, Sub},
 };
 
+/// Length trait for units.
 pub trait Length:
     Add<Output = Self> + Sub<Output = Self> + Mul<f64, Output = Self> + Sized + Copy
 {
+    /// Convert the length to points (as `f64`).
+    ///
+    /// # Example
+    /// ```
+    /// use shapdf::{Length, Mm};
+    /// assert_eq!(Mm(10.).to_points(), 28.3464566929);
+    /// ```
     fn to_points(&self) -> f64;
 
     fn to_mm(&self) -> f64 {
@@ -37,6 +45,13 @@ pub trait Length:
     }
 }
 
+/// Millimeter (length unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Mm;
+/// let len = Mm(10.); // 10 mm
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Mm(pub f64);
 
@@ -52,6 +67,13 @@ impl fmt::Display for Mm {
     }
 }
 
+/// Centimeter ([Length] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Cm;
+/// let len = Cm(10.); // 10 cm
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Cm(pub f64);
 
@@ -67,6 +89,13 @@ impl fmt::Display for Cm {
     }
 }
 
+/// Inch ([Length] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Inch;
+/// let len = Inch(10.); // 10 inch
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Inch(pub f64);
 
@@ -82,6 +111,13 @@ impl fmt::Display for Inch {
     }
 }
 
+/// Point ([Length] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Pt;
+/// let len = Pt(10.); // 10 points
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Pt(pub f64);
 
@@ -97,6 +133,7 @@ impl fmt::Display for Pt {
     }
 }
 
+/// Angle trait for units.
 pub trait Angle:
     Add<Output = Self> + Sub<Output = Self> + Mul<f64, Output = Self> + Sized + Copy
 {
@@ -104,6 +141,13 @@ pub trait Angle:
     fn to_radians(&self) -> f64;
 }
 
+/// Degree ([Angle] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Degree;
+/// let angle = Degree(90.); // 90 degrees
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Degree(pub f64);
 
@@ -123,6 +167,13 @@ impl fmt::Display for Degree {
     }
 }
 
+/// Radian ([Angle] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::Radian;
+/// let angle = Radian(std::f64::consts::PI); // π radians
+/// ```
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Radian(pub f64);
 
@@ -223,10 +274,20 @@ impl_add_between_units!(Cm, Pt, to_cm, to_points);
 impl_add_between_units!(Inch, Pt, to_inch, to_points);
 impl_add_between_units!(Degree, Radian, to_degrees, to_radians);
 
+/// Color trait for units.
 pub trait Color {
     fn to_rgb(&self) -> (f64, f64, f64);
 }
 
+/// rgb color ([Color] unit).
+///
+/// r, g, b values should be between 0.0 and 1.0.
+///
+/// # Example
+/// ```
+/// use shapdf::Rgb;
+/// let color = Rgb(1., 0., 0.); // red color
+/// ```
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Rgb(pub f64, pub f64, pub f64);
 
@@ -236,6 +297,15 @@ impl Color for Rgb {
     }
 }
 
+/// Gray color ([Color] unit).
+///
+/// Gray value should be between 0.0 and 1.0.
+///
+/// # Example
+/// ```
+/// use shapdf::Gray;
+/// let color = Gray(0.5); // gray color
+/// ```
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct RGB(pub u8, pub u8, pub u8);
 
@@ -249,6 +319,13 @@ impl Color for RGB {
     }
 }
 
+/// Named color ([Color] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::NamedColor;
+/// let color = NamedColor("red"); // red color
+/// ```
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Gray(pub f64);
 
@@ -272,5 +349,16 @@ impl Color for NamedColor {
             "blue" => (0., 0., 1.),
             _ => (0., 0., 0.),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pt_to_points() {
+        let pt = Pt(10.);
+        assert_eq!(pt.to_points(), 10.);
     }
 }

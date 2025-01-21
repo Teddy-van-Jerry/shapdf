@@ -96,6 +96,7 @@ impl<'a> Shape<'a> {
                     );
                 }
                 ShapeType::Circle => content.extend_from_slice(
+                    // Ref: https://stackoverflow.com/a/46897816/15080514
                     format!(
                         "{} w\n1 J\n{} {} m\n{} {} l\nS\n",
                         self.radius.unwrap() * 2.0,

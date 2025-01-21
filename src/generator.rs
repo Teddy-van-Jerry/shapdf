@@ -16,6 +16,7 @@ const N_OBJ_RESERVED: usize = 2; // First two objects are reserved for pages.
 static DEFAULT_PAGE_WIDTH: Lazy<Mutex<f64>> = Lazy::new(|| Inch(8.5).to_points().into());
 static DEFAULT_PAGE_HEIGHT: Lazy<Mutex<f64>> = Lazy::new(|| Inch(11.0).to_points().into());
 
+/// PDF generator.
 #[derive(Debug)]
 pub struct Generator {
     file_path: path::PathBuf,
