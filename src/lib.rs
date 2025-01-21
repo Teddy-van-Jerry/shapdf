@@ -57,6 +57,7 @@
 //!     Ok(())
 //! }
 //! ```
+//! More examples are available in the [`examples`](https://github.com/Teddy-van-Jerry/shapdf/tree/master/examples) directory.
 //!
 //! ## Implementation Facts
 //! - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).

@@ -4,7 +4,7 @@ Create Shapes into PDF
 GitHub: [Teddy-van-Jerry/shapdf](https://github.com/Teddy-van-Jerry/shapdf)
 
 ## Motivation
-- Efficient programmable generation of shapes in PDF (rather than lengthy compilation of LaTeX [Ti*k*Z](https://tikz.dev/) or Typst [CeTZ](https://cetz-package.github.io/));
+- Efficient programmable generation of shapes in PDF (rather than slow compilation of LaTeX [Ti*k*Z](https://tikz.dev/) or Typst [CeTZ](https://cetz-package.github.io/));
 - Minimal dependencies in Rust, relying mostly on **PDF primitives**.
 
 ## Capabilities
@@ -57,6 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 ```
+More examples are available in the [`examples`](examples) directory.
 
 ## Implementation Facts
 - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).
