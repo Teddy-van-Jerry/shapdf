@@ -45,7 +45,7 @@ pub trait Length:
     }
 }
 
-/// Millimeter (length unit).
+/// Millimeter ([Length] unit).
 ///
 /// # Example
 /// ```
@@ -297,9 +297,9 @@ impl Color for Rgb {
     }
 }
 
-/// Gray color ([Color] unit).
+/// RGB color ([Color] unit).
 ///
-/// Gray value should be between 0.0 and 1.0.
+/// R, G, B values should be between 0 and 255.
 ///
 /// # Example
 /// ```
@@ -319,13 +319,8 @@ impl Color for RGB {
     }
 }
 
-/// Named color ([Color] unit).
-///
-/// # Example
-/// ```
-/// use shapdf::NamedColor;
-/// let color = NamedColor("red"); // red color
-/// ```
+/// Gray color ([Color] unit).
+/// Gray value should be between 0.0 and 1.0.
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Gray(pub f64);
 
@@ -335,6 +330,13 @@ impl Color for Gray {
     }
 }
 
+/// Named color ([Color] unit).
+///
+/// # Example
+/// ```
+/// use shapdf::NamedColor;
+/// let color = NamedColor("red"); // red color
+/// ```
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct NamedColor(pub &'static str);
 

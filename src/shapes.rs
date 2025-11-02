@@ -54,6 +54,10 @@ impl Default for ShapeType {
     }
 }
 
+/// A shape to draw on the PDF.
+/// 
+/// This struct is mostly internal and should not be used directly.
+/// You should use the methods provided by the [`Generator`](crate::Generator) struct.
 #[derive(Debug, Default)]
 pub struct Shape<'a> {
     pub enum_type: ShapeType,

@@ -40,7 +40,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         .with_cap_type(CapType::Round)
         .with_color(NamedColor("red"))
         .draw();
-
     generator.add_page_letter();
     generator
         .rectangle(Mm(80.), Mm(180.), Mm(50.), Mm(30.))
