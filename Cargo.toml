@@ -19,6 +19,7 @@ exclude = [
 [features]
 default = ["compress"]
 compress = ["dep:flate2"]
+wasm = []
 
 [dependencies]
 once_cell = "1.20"

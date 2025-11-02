@@ -7,3 +7,9 @@
 # This Project
 /output
 examples/**/*.pdf
+examples/**/target
+examples/wasm/dist
+examples/wasm/pkg
+
+# Node.js
+node_modules

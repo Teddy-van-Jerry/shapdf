@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>shapdf wasm demo</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; max-width: 60rem; }
+    textarea { width: 100%; height: 12rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+    #status { margin-top: 1rem; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>shapdf Web Demo</h1>
+  <p>Enter a <code>.shapdf</code> script below, then render it to PDF in your browser.</p>
+  <textarea id="script">page default
+line 10mm 10mm 50mm 50mm width=2mm color=red
+circle 40mm 40mm 12mm color=gray(0.4)</textarea>
+  <div style="margin-top:1rem;">
+    <button id="render">Render PDF</button>
+  </div>
+  <div id="status"></div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

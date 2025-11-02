@@ -72,7 +72,10 @@ mod shapes;
 mod units;
 
 pub use generator::*;
+#[cfg(feature = "wasm")]
+pub use script::render_script_to_bytes;
+#[cfg(not(feature = "wasm"))]
+pub use script::render_script_to_pdf;
 pub use script::{
-    execute_instructions, parse_script, render_script_to_pdf, ExecutionError, Instruction,
-    InstructionKind, ParseError,
+    execute_instructions, parse_script, ExecutionError, Instruction, InstructionKind, ParseError,
 };

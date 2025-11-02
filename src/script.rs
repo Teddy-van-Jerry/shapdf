@@ -3,11 +3,7 @@ use crate::{
     shapes::{Anchor, CapType, Shape},
     units::{Degree, Gray, Length, Mm, Pt, Radian, Rgb, RGB},
 };
-use std::{
-    error::Error,
-    fmt,
-    path::{Path, PathBuf},
-};
+use std::{error::Error, fmt, path::PathBuf};
 
 #[derive(Debug, Clone)]
 pub struct Instruction {
@@ -650,9 +646,10 @@ pub fn execute_instructions(
     Ok(())
 }
 
+#[cfg(not(feature = "wasm"))]
 pub fn render_script_to_pdf(
     script: &str,
-    output_path: impl AsRef<Path>,
+    output_path: impl AsRef<std::path::Path>,
 ) -> Result<(), Box<dyn Error>> {
     let instructions = parse_script(script)?;
     let output: PathBuf = output_path.as_ref().to_path_buf();
@@ -660,6 +657,14 @@ pub fn render_script_to_pdf(
     execute_instructions(&mut generator, &instructions)?;
     generator.write_pdf()?;
     Ok(())
+}
+
+#[cfg(feature = "wasm")]
+pub fn render_script_to_bytes(script: &str) -> Result<Vec<u8>, Box<dyn Error>> {
+    let instructions = parse_script(script)?;
+    let mut generator = Generator::new(PathBuf::new());
+    execute_instructions(&mut generator, &instructions)?;
+    Ok(generator.to_pdf_bytes())
 }
 
 fn apply_page(generator: &mut Generator, kind: PageKind) {
@@ -768,7 +773,7 @@ fn apply_rectangle(generator: &mut Generator, spec: RectSpec) {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "wasm")))]
 mod tests {
     use super::*;
     use std::fs;

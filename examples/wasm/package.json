@@ -1,0 +1,12 @@
+{
+  "name": "shapdf-wasm-example",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && npx wasm-pack build --target web --out-dir dist/pkg --out-name shapdf_wasm_example && cp index.html dist/ && cp main.js dist/",
+    "serve": "npm run build && npx http-server dist -p 8080"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "wasm-pack": "^0.12.1"
+  }
+}

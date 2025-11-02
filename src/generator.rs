@@ -2,10 +2,13 @@
 use flate2::{write::ZlibEncoder, Compression};
 use once_cell::sync::Lazy;
 use std::error::Error;
+#[cfg(not(target_arch = "wasm32"))]
 use std::fs::File;
+#[cfg(target_arch = "wasm32")]
+use std::io;
+#[cfg(not(target_arch = "wasm32"))]
 use std::io::Write;
 use std::path;
-use std::result::Result;
 use std::sync::Mutex;
 
 pub use crate::shapes::*;
@@ -19,39 +22,76 @@ static DEFAULT_PAGE_HEIGHT: Lazy<Mutex<f64>> = Lazy::new(|| Inch(11.0).to_points
 /// PDF generator.
 #[derive(Debug)]
 pub struct Generator {
+    #[cfg(not(target_arch = "wasm32"))]
     file_path: path::PathBuf,
+    #[cfg(target_arch = "wasm32")]
+    _file_path: path::PathBuf,
     pdf: Vec<u8>,            // PDF binary content
     pdf_pre: Vec<u8>,        // PDF binary content before the first page
     offsets: Vec<usize>,     // Object offsets for xref
     pre_offset: usize,       // Offset before the first page
     content_stream: Vec<u8>, // Content stream to accumulate drawing commands
     pages: Vec<usize>,       // Page object numbers
+    finished: bool,          // Whether the PDF was finalized
 }
 
 impl Generator {
     pub fn new(file_path: path::PathBuf) -> Self {
         Self {
+            #[cfg(not(target_arch = "wasm32"))]
             file_path,
+            #[cfg(target_arch = "wasm32")]
+            _file_path: file_path,
             pdf: Vec::new(),
             pdf_pre: Vec::new(),
             offsets: vec![0; N_OBJ_RESERVED], // First two objects are reserved for pages.
             pre_offset: 0,
             content_stream: Vec::new(),
             pages: Vec::new(),
+            finished: false,
         }
     }
 
-    pub fn write_pdf(&mut self) -> Result<(), Box<dyn Error>> {
+    fn ensure_finalized(&mut self) {
+        if self.finished {
+            return;
+        }
         self.initialize_pdf();
         self.finalize_pdf();
+        self.finished = true;
+    }
+
+    fn collect_pdf_bytes(&mut self) -> Vec<u8> {
+        self.ensure_finalized();
+        let mut bytes = Vec::with_capacity(self.pdf_pre.len() + self.pdf.len());
+        bytes.extend_from_slice(&self.pdf_pre);
+        bytes.extend_from_slice(&self.pdf);
+        bytes
+    }
+
+    pub fn to_pdf_bytes(&mut self) -> Vec<u8> {
+        self.collect_pdf_bytes()
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn write_pdf(&mut self) -> Result<(), Box<dyn Error>> {
+        let bytes = self.collect_pdf_bytes();
         // create directories if not exist
         if let Some(dir) = self.file_path.parent() {
             std::fs::create_dir_all(dir)?;
         }
         let mut file = File::create(&self.file_path)?;
-        file.write_all(&self.pdf_pre)?;
-        file.write_all(&self.pdf)?;
+        file.write_all(&bytes)?;
         Ok(())
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn write_pdf(&mut self) -> Result<(), Box<dyn Error>> {
+        Err(io::Error::new(
+            io::ErrorKind::Other,
+            "write_pdf is not supported on wasm targets",
+        )
+        .into())
     }
 
     fn initialize_pdf(&mut self) {

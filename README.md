@@ -84,8 +84,13 @@ Library consumers can also call `shapdf::render_script_to_pdf(script, output_pat
   - `set default_angle <value>` (`deg` default, or `rad`)
   - `line <x1> <y1> <x2> <y2> [width=...] [color=...] [cap=...]`
   - `circle <x> <y> <radius> [color=...]`
-  - `rectangle <x> <y> <width> <height> [color=...] [anchor=...] [angle=...]`
+- `rectangle <x> <y> <width> <height> [color=...] [anchor=...] [angle=...]`
 - The first drawing command automatically inserts a default page if none was added.
+
+### WebAssembly
+- Build the library with `--features wasm` to enable `shapdf::render_script_to_bytes(script)` for in-memory rendering.
+- The returned `Vec<u8>` contains the PDF bytes, ready to serve or download in a web context.
+- See [`examples/wasm`](examples/wasm) for a minimal `wasm-bindgen` wrapper that exposes `render_script` to JavaScript and returns PDF bytes ready for download.
 
 ## Implementation Facts
 - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).
