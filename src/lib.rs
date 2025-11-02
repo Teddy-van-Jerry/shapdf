@@ -71,6 +71,9 @@ mod script;
 mod shapes;
 mod units;
 
+#[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
 pub use generator::*;
 #[cfg(feature = "wasm")]
 pub use script::render_script_to_bytes;
@@ -79,3 +82,9 @@ pub use script::render_script_to_pdf;
 pub use script::{
     execute_instructions, parse_script, ExecutionError, Instruction, InstructionKind, ParseError,
 };
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn render_script(script: &str) -> Result<Vec<u8>, JsValue> {
+    render_script_to_bytes(script).map_err(|err| JsValue::from_str(&err.to_string()))
+}

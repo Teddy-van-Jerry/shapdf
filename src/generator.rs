@@ -263,7 +263,7 @@ impl Generator {
         y1: impl Length,
         x2: impl Length,
         y2: impl Length,
-    ) -> Shape {
+    ) -> Shape<'_> {
         Shape {
             content_stream: Some(&mut self.content_stream),
             enum_type: ShapeType::Line,
@@ -273,7 +273,7 @@ impl Generator {
         }
     }
 
-    pub fn circle(&mut self, x: impl Length, y: impl Length, radius: impl Length) -> Shape {
+    pub fn circle(&mut self, x: impl Length, y: impl Length, radius: impl Length) -> Shape<'_> {
         Shape {
             content_stream: Some(&mut self.content_stream),
             enum_type: ShapeType::Circle,
@@ -290,7 +290,7 @@ impl Generator {
         y: impl Length,
         width: impl Length,
         height: impl Length,
-    ) -> Shape {
+    ) -> Shape<'_> {
         Shape {
             content_stream: Some(&mut self.content_stream),
             enum_type: ShapeType::Rectangle,
