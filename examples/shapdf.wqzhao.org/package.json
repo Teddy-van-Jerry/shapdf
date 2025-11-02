@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prebuild": "npm run build:wasm",
     "build:wasm": "wasm-pack build ../../ --target web --out-dir src/wasm --out-name shapdf_wasm_example -- --features wasm",
     "lint": "eslint .",
     "preview": "vite preview"

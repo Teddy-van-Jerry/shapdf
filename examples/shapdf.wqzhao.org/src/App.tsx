@@ -108,8 +108,9 @@ export default function App() {
         .then(() => {
           setStatusMessage("WASM module ready. Render to preview.", "success");
         })
-        .catch((error) => {
-          setStatusMessage(`Failed to load WebAssembly: ${String(error)}`, "error");
+        .catch((error: unknown) => {
+          const message = error instanceof Error ? error.message : String(error);
+          setStatusMessage(`Failed to load WebAssembly: ${message}`, "error");
           wasmInitRef.current = null;
           throw error;
         });
@@ -177,9 +178,10 @@ const currentYear = useMemo(() => new Date().getFullYear(), []);
           await page.render({ canvasContext: ctx, viewport, canvas }).promise;
           container.appendChild(canvas);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(error);
-        setStatusMessage(`Unable to display PDF: ${String(error)}`, "error");
+        const message = error instanceof Error ? error.message : String(error);
+        setStatusMessage(`Unable to display PDF: ${message}`, "error");
         setPageCount(0);
       }
     },
@@ -216,10 +218,11 @@ const currentYear = useMemo(() => new Date().getFullYear(), []);
         minute: "2-digit",
       });
       setStatusMessage(`Rendered successfully at ${timestamp}.`, "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
+      const message = error instanceof Error ? error.message : String(error);
       revokeDownloadUrl();
-      setStatusMessage(`Render failed: ${String(error)}`, "error");
+      setStatusMessage(`Render failed: ${message}`, "error");
       setPageCount(0);
     } finally {
       setIsRendering(false);
@@ -266,9 +269,10 @@ const currentYear = useMemo(() => new Date().getFullYear(), []);
         }
         setSelectedSampleId("");
         setStatusMessage(`Loaded template “${sample.label}”.`, "success");
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(error);
-        setStatusMessage(`Could not load template: ${String(error)}`, "error");
+        const message = error instanceof Error ? error.message : String(error);
+        setStatusMessage(`Could not load template: ${message}`, "error");
       }
     },
     [isTitleDirty, revokeDownloadUrl, setStatusMessage],
@@ -388,9 +392,10 @@ const currentYear = useMemo(() => new Date().getFullYear(), []);
       setProjectTitle(baseName || "shapdf-output");
       setIsTitleDirty(true);
       setStatusMessage(`Loaded local template “${file.name}”.`, "success");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      setStatusMessage(`Failed to read file: ${String(error)}`, "error");
+      const message = error instanceof Error ? error.message : String(error);
+      setStatusMessage(`Failed to read file: ${message}`, "error");
     } finally {
       event.target.value = "";
     }
