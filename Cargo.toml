@@ -3,7 +3,7 @@ name = "shapdf"
 description = "Create Shapes into PDF"
 repository = "https://github.com/Teddy-van-Jerry/shapdf"
 authors = ["Teddy van Jerry <me@teddy-van-jerry.org>"]
-version = "0.1.1"
+version = "0.2.0"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 edition = "2021"
@@ -23,3 +23,4 @@ compress = ["dep:flate2"]
 [dependencies]
 once_cell = "1.20"
 flate2 = { version = "1.0", optional = true }
+clap = { version = "4.5", features = ["derive"] }

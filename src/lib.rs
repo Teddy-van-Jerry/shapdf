@@ -67,7 +67,12 @@
 //! © 2025 [Teddy van Jerry](https://github.com/Teddy-van-Jerry) ([Wuqiong Zhao](https://wqzhao.org))
 
 mod generator;
+mod script;
 mod shapes;
 mod units;
 
 pub use generator::*;
+pub use script::{
+    execute_instructions, parse_script, render_script_to_pdf, ExecutionError, Instruction,
+    InstructionKind, ParseError,
+};

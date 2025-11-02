@@ -1,32 +1,59 @@
-use shapdf::*;
-use std::error::Error;
+use clap::Parser;
+use shapdf::{execute_instructions, parse_script, Generator};
+use std::{
+    error::Error,
+    fs,
+    io::{self, Read},
+    path::PathBuf,
+};
+
+#[derive(Parser, Debug)]
+#[command(
+    about = "Generate vector shapes into PDF via declarative scripts",
+    author,
+    version
+)]
+struct Cli {
+    /// Input script file. Use '-' to read from standard input.
+    #[arg(value_name = "INPUT")]
+    input: Option<String>,
+
+    /// Output PDF file path.
+    #[arg(short, long, value_name = "OUTPUT")]
+    output: Option<PathBuf>,
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut generator = Generator::new("output/shapes.pdf".into());
-    // Generator::set_default_page_size(Pt(800.), Pt(800.));
-    generator.add_page();
-    generator
-        .circle(Mm(20.), Mm(20.), Mm(10.))
-        .with_color(NamedColor("blue"))
-        .draw();
-    generator
-        .line(Pt(500.), Pt(600.), Pt(300.), Pt(400.))
-        .with_width(Mm(10.))
-        .with_cap_type(CapType::Round)
-        .with_color(NamedColor("red"))
-        .draw();
-    generator.add_page_letter();
-    generator
-        .rectangle(Mm(80.), Mm(180.), Mm(50.), Mm(30.))
-        .with_anchor(Anchor::Center)
-        .with_angle(Degree(30.))
-        .draw();
-    generator
-        .circle(Mm(80.), Mm(180.), Mm(1.))
-        .with_color(NamedColor("green"))
-        .draw();
-    generator.add_page_a4();
+    let cli = Cli::parse();
+    let (script, inferred_output) = read_script(cli.input.as_deref())?;
+
+    let output_path = cli
+        .output
+        .or(inferred_output)
+        .unwrap_or_else(|| PathBuf::from("output/shapes.pdf"));
+
+    let instructions = parse_script(&script)?;
+    let mut generator = Generator::new(output_path.clone());
+    execute_instructions(&mut generator, &instructions)?;
     generator.write_pdf()?;
-    println!("PDF generated successfully!");
     Ok(())
+}
+
+fn read_script(input: Option<&str>) -> Result<(String, Option<PathBuf>), Box<dyn Error>> {
+    match input {
+        Some("-") => Ok((read_from_stdin()?, None)),
+        Some(path) => {
+            let path = PathBuf::from(path);
+            let script = fs::read_to_string(&path)?;
+            let output = path.with_extension("pdf");
+            Ok((script, Some(output)))
+        }
+        None => Ok((read_from_stdin()?, None)),
+    }
+}
+
+fn read_from_stdin() -> Result<String, io::Error> {
+    let mut buffer = String::new();
+    io::stdin().read_to_string(&mut buffer)?;
+    Ok(buffer)
 }
