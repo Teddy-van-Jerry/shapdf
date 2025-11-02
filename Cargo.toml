@@ -16,6 +16,9 @@ exclude = [
     ".DS_Store",
 ]
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [features]
 default = ["compress"]
 compress = ["dep:flate2"]
