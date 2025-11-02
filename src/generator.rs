@@ -6,7 +6,6 @@ use std::error::Error;
 use std::fs::File;
 #[cfg(target_arch = "wasm32")]
 use std::io;
-#[cfg(not(target_arch = "wasm32"))]
 use std::io::Write;
 use std::path;
 use std::sync::Mutex;
