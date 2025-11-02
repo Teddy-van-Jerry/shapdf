@@ -10,6 +10,7 @@ examples/**/*.pdf
 examples/**/target
 examples/wasm/dist
 examples/wasm/pkg
+examples/shapdf.wqzhao.org/src/wasm
 
 # Node.js
 node_modules

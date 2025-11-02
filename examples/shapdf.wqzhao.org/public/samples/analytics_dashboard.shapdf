@@ -1,0 +1,63 @@
+# Analytics dashboard layout with cards and trend indicators
+set default_page_size 210mm 297mm
+set default_color rgb(0.18,0.2,0.28)
+set default_width 0.5mm
+
+page a4
+
+# Header banner
+rectangle 20mm 35mm 170mm 25mm anchor=northwest color=#0f8c56
+rectangle 20mm 32mm 170mm 3mm anchor=northwest color=#1fa769
+
+# Metric cards row
+rectangle 25mm 65mm 48mm 38mm anchor=northwest color=#f7fdfa
+rectangle 78mm 65mm 48mm 38mm anchor=northwest color=#f7fdfa
+rectangle 131mm 65mm 48mm 38mm anchor=northwest color=#f7fdfa
+
+# Accent bars inside cards
+rectangle 27mm 69mm 12mm 4mm anchor=northwest color=#0f8c56
+rectangle 80mm 69mm 12mm 4mm anchor=northwest color=#09563a
+rectangle 133mm 69mm 12mm 4mm anchor=northwest color=#1fa769
+
+# Trend lines inside cards
+line 30mm 89mm 68mm 77mm width=0.8mm color=#1fa769 cap=round
+line 83mm 84mm 121mm 74mm width=0.8mm color=#0f8c56 cap=round
+line 136mm 92mm 174mm 80mm width=0.8mm color=#1fa769 cap=round
+
+# Main chart panel
+rectangle 25mm 118mm 154mm 90mm anchor=northwest color=#0b1526
+rectangle 25mm 210mm 154mm 10mm anchor=northwest color=#13213a
+
+# Chart grid lines
+line 35mm 126mm 169mm 126mm width=0.3mm color=gray(0.6)
+line 35mm 142mm 169mm 142mm width=0.3mm color=gray(0.6)
+line 35mm 158mm 169mm 158mm width=0.3mm color=gray(0.6)
+line 35mm 174mm 169mm 174mm width=0.3mm color=gray(0.6)
+line 46mm 126mm 46mm 198mm width=0.3mm color=gray(0.6)
+line 74mm 126mm 74mm 198mm width=0.3mm color=gray(0.6)
+line 102mm 126mm 102mm 198mm width=0.3mm color=gray(0.6)
+line 130mm 126mm 130mm 198mm width=0.3mm color=gray(0.6)
+line 158mm 126mm 158mm 198mm width=0.3mm color=gray(0.6)
+
+# Line plot
+line 40mm 188mm 74mm 176mm width=1mm color=#1fa769 cap=round
+line 74mm 176mm 102mm 184mm width=1mm color=#1fa769 cap=round
+line 102mm 184mm 130mm 160mm width=1mm color=#1fa769 cap=round
+line 130mm 160mm 158mm 168mm width=1mm color=#1fa769 cap=round
+line 158mm 168mm 167mm 152mm width=1mm color=#1fa769 cap=round
+
+# Highlight datapoints
+circle 40mm 188mm 3mm color=#1fa769
+circle 74mm 176mm 3mm color=#1fa769
+circle 102mm 184mm 3mm color=#1fa769
+circle 130mm 160mm 3mm color=#1fa769
+circle 158mm 168mm 3mm color=#1fa769
+circle 167mm 152mm 3mm color=#1fa769
+
+# Sidebar tasks
+rectangle 185mm 65mm 15mm 150mm anchor=northwest color=#101a2c
+rectangle 187mm 72mm 11mm 12mm anchor=northwest color=#1fa769
+rectangle 187mm 90mm 11mm 12mm anchor=northwest color=#ffb347
+rectangle 187mm 108mm 11mm 12mm anchor=northwest color=#9f6eea
+rectangle 187mm 126mm 11mm 12mm anchor=northwest color=#4655f6
+rectangle 187mm 144mm 11mm 12mm anchor=northwest color=#d13d6b

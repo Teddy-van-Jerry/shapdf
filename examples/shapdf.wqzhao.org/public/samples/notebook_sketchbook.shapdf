@@ -1,0 +1,71 @@
+# Designer notebook inspired layout with grid guides and sticky notes
+set default_page_size 210mm 297mm
+set default_color gray(0.25)
+set default_width 0.4mm
+
+page a4
+
+# Background grid
+set default_color gray(0.4)
+set default_width 0.2mm
+line 25mm 50mm 180mm 50mm
+line 25mm 60mm 180mm 60mm
+line 25mm 70mm 180mm 70mm
+line 25mm 80mm 180mm 80mm
+line 25mm 90mm 180mm 90mm
+line 25mm 100mm 180mm 100mm
+line 25mm 110mm 180mm 110mm
+line 25mm 120mm 180mm 120mm
+line 25mm 130mm 180mm 130mm
+line 25mm 140mm 180mm 140mm
+line 25mm 150mm 180mm 150mm
+line 25mm 160mm 180mm 160mm
+line 25mm 170mm 180mm 170mm
+line 25mm 180mm 180mm 180mm
+line 25mm 190mm 180mm 190mm
+line 25mm 200mm 180mm 200mm
+line 25mm 210mm 180mm 210mm
+line 25mm 220mm 180mm 220mm
+line 25mm 230mm 180mm 230mm
+line 25mm 240mm 180mm 240mm
+line 25mm 250mm 180mm 250mm
+
+line 30mm 45mm 30mm 260mm
+line 40mm 45mm 40mm 260mm
+line 50mm 45mm 50mm 260mm
+line 60mm 45mm 60mm 260mm
+line 70mm 45mm 70mm 260mm
+line 80mm 45mm 80mm 260mm
+line 90mm 45mm 90mm 260mm
+line 100mm 45mm 100mm 260mm
+line 110mm 45mm 110mm 260mm
+line 120mm 45mm 120mm 260mm
+line 130mm 45mm 130mm 260mm
+line 140mm 45mm 140mm 260mm
+line 150mm 45mm 150mm 260mm
+line 160mm 45mm 160mm 260mm
+line 170mm 45mm 170mm 260mm
+
+# Margin highlight
+set default_color rgb(0.85,0.2,0.34)
+set default_width 0.8mm
+line 35mm 40mm 35mm 260mm
+
+# Sticky note cluster
+rectangle 55mm 90mm 55mm 45mm anchor=northwest angle=2deg color=#fef3c7
+rectangle 115mm 85mm 55mm 45mm anchor=northwest angle=-3deg color=#fde68a
+rectangle 85mm 135mm 60mm 48mm anchor=northwest angle=4deg color=#ffe4e6
+
+# Sticky pin circles
+circle 60mm 90mm 2mm color=#d946ef
+circle 120mm 86mm 2mm color=#fb7185
+circle 90mm 135mm 2mm color=#22d3ee
+
+# Quick sketch blocks
+set default_color rgb(0.13,0.14,0.2)
+line 65mm 170mm 135mm 220mm width=1mm color=#1fa769 cap=round
+rectangle 80mm 195mm 25mm 15mm anchor=center angle=25deg color=#0f8c56
+rectangle 120mm 215mm 35mm 18mm anchor=center angle=-18deg color=#063225
+
+# Footer label strip
+rectangle 25mm 260mm 155mm 12mm anchor=northwest color=#0f1626
