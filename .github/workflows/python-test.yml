@@ -35,11 +35,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Cache Rust dependencies
         uses: actions/cache@v4
