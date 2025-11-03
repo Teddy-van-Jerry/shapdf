@@ -60,7 +60,7 @@ jobs:
         run: maturin build --release --out ../dist
 
       - name: Install Python package
-        run: pip install dist/*.whl
+        run: pip install pyshapdf --no-index --find-links dist/
 
       - name: Run tests
         working-directory: ./python
