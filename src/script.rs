@@ -118,6 +118,7 @@ pub enum NamedColorValue {
     Red,
     Green,
     Blue,
+    Yellow,
 }
 
 impl NamedColorValue {
@@ -129,6 +130,7 @@ impl NamedColorValue {
             "red" => Some(Self::Red),
             "green" => Some(Self::Green),
             "blue" => Some(Self::Blue),
+            "yellow" => Some(Self::Yellow),
             _ => None,
         }
     }
@@ -689,6 +691,7 @@ fn apply_default_color(color: ColorValue) {
             NamedColorValue::Red => Generator::set_default_color(Rgb(1.0, 0.0, 0.0)),
             NamedColorValue::Green => Generator::set_default_color(Rgb(0.0, 1.0, 0.0)),
             NamedColorValue::Blue => Generator::set_default_color(Rgb(0.0, 0.0, 1.0)),
+            NamedColorValue::Yellow => Generator::set_default_color(Rgb(1.0, 1.0, 0.0)),
         },
         ColorValue::Gray(value) => Generator::set_default_color(Gray(value)),
         ColorValue::RgbFloat { r, g, b } => Generator::set_default_color(Rgb(r, g, b)),
@@ -727,6 +730,7 @@ fn with_color(shape: &mut Shape<'_>, color: ColorValue) {
                 NamedColorValue::Red => shape.with_color(Rgb(1.0, 0.0, 0.0)),
                 NamedColorValue::Green => shape.with_color(Rgb(0.0, 1.0, 0.0)),
                 NamedColorValue::Blue => shape.with_color(Rgb(0.0, 0.0, 1.0)),
+                NamedColorValue::Yellow => shape.with_color(Rgb(1.0, 1.0, 0.0)),
             };
         }
         ColorValue::Gray(value) => {

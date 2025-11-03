@@ -1,0 +1,39 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "pyshapdf"
+version = "0.2.0"
+description = "Python bindings for shapdf - Create Shapes into PDF"
+readme = "README.md"
+authors = [
+    {name = "Teddy van Jerry", email = "me@teddy-van-jerry.org"}
+]
+license = {text = "GPL-3.0-or-later"}
+keywords = ["pdf", "shapes", "generator", "rust", "graphics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://shapdf.wqzhao.org"
+Documentation = "https://docs.rs/shapdf"
+Repository = "https://github.com/Teddy-van-Jerry/shapdf"
+"Bug Tracker" = "https://github.com/Teddy-van-Jerry/shapdf/issues"
+
+[tool.maturin]
+module-name = "pyshapdf"

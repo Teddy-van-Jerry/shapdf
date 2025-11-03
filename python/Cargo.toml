@@ -1,0 +1,16 @@
+[package]
+name = "pyshapdf"
+version = "0.2.0"
+description = "Python bindings for shapdf - Create Shapes into PDF"
+authors = ["Teddy van Jerry <me@teddy-van-jerry.org>"]
+license = "GPL-3.0-or-later"
+edition = "2021"
+repository = "https://github.com/Teddy-van-Jerry/shapdf"
+
+[lib]
+name = "pyshapdf"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+shapdf = { path = "..", default-features = true }

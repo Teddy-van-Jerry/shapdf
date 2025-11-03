@@ -1,3 +1,6 @@
+[workspace]
+members = [".", "python"]
+
 [package]
 name = "shapdf"
 description = "Create Shapes into PDF"

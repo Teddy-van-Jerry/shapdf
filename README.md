@@ -23,6 +23,7 @@ Create Shapes into PDF
 - [x] PDF Stream Compression (feature `compress`)
 - [x] CLI for declarative scripts
 - [x] WebAssembly
+- [x] Python Bindings
 
 More features are coming soon!
 
@@ -100,6 +101,28 @@ Library consumers can also call `shapdf::render_script_to_pdf(script, output_pat
 - Build the library with `--features wasm` to enable `shapdf::render_script_to_bytes(script)` for in-memory rendering.
 - The returned `Vec<u8>` contains the PDF bytes, ready to serve or download in a web context.
 - See [`examples/shapdf.wqzhao.org`](examples/shapdf.wqzhao.org) for the full React/TypeScript web editor implementation.
+
+## Python Bindings
+
+Python bindings are available via the `pyshapdf` package:
+
+```sh
+pip install pyshapdf
+```
+
+```python
+import pyshapdf
+
+script = """
+page letter
+circle 100mm 150mm 20mm color=blue
+rectangle 50mm 50mm 40mm 30mm color=green angle=45deg anchor=center
+"""
+
+pyshapdf.render_script(script, "output.pdf")
+```
+
+See [`python/README.md`](python/README.md) for full documentation, examples, and API reference.
 
 ## Implementation Facts
 - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).
