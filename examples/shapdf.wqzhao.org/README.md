@@ -1,30 +1,42 @@
-# shapdf.wqzhao.org frontend
+# shapdf Web Editor
 
-This React/Vite workspace hosts the in-browser shapdf editor.
+**Live Demo: [shapdf.wqzhao.org](https://shapdf.wqzhao.org)**
 
-## Regenerating the WebAssembly bundle
+An in-browser PDF shape editor powered by Rust and WebAssembly. Create lines, circles, and rectangles using a simple declarative syntax.
 
-The contents of `src/wasm` are produced from the root Rust crate via `wasm-pack`.
+## Features
 
-From this directory run:
+- 🎨 **Monaco Editor** - VS Code-like editing experience with syntax highlighting
+- 📄 **Live Preview** - Real-time PDF rendering with zoom controls (25%-300%)
+- 🚀 **WebAssembly** - Fast, efficient rendering using Rust compiled to WASM
+- 💾 **Export** - Download both `.shapdf` scripts and generated PDFs
+- 📱 **Responsive** - Works on desktop and mobile devices
 
-```sh
-npm run build:wasm
-```
-
-This wraps `wasm-pack build ../../ --target web --out-dir src/wasm --out-name shapdf_wasm_example`, rebuilding the JavaScript glue code, type definitions, and `.wasm` binary in `src/wasm/`. Re-run this command whenever the Rust sources change.
-
-## Development
+## Quick Start
 
 ```sh
 npm install
 npm run dev
 ```
 
-## Production build
+Visit `http://localhost:5173` to start editing.
 
-```sh
-npm run build
-```
+## Build Commands
 
-The output is emitted to `dist/`, ready for GitHub Pages deployment.
+- **`npm run dev`** - Start development server
+- **`npm run build`** - Build for production (includes WASM rebuild)
+- **`npm run build:wasm`** - Rebuild WebAssembly bundle only
+- **`npm run preview`** - Preview production build
+
+## WebAssembly
+
+The WASM bundle in `src/wasm/` is auto-generated from the root Rust crate. Run `npm run build:wasm` after modifying Rust sources.
+
+## Deployment
+
+Built artifacts in `dist/` are ready for static hosting (GitHub Pages, Netlify, Vercel, etc.).
+
+---
+
+**Author:** [Wuqiong Zhao](https://wqzhao.org)
+**License:** GPL-3.0

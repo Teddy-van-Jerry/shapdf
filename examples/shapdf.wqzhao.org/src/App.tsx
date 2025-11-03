@@ -254,11 +254,9 @@ export default function App() {
         const { getDocument } = await loadPdfJs();
         const pdfDoc: PDFDocumentProxy = await getDocument({ data: bytes.slice() }).promise;
 
-        // Only update page count if it actually changed
-        if (pdfDoc.numPages !== pageCountRef.current) {
-          pageCountRef.current = pdfDoc.numPages;
-          setPageCount(pdfDoc.numPages);
-        }
+        // Always update page count to ensure UI consistency
+        pageCountRef.current = pdfDoc.numPages;
+        setPageCount(pdfDoc.numPages);
 
         // Build all canvases, rendering each page in separate animation frames
         const canvases: HTMLCanvasElement[] = [];
@@ -322,6 +320,13 @@ export default function App() {
     pdfScaleRef.current = pdfScale;
   }, [pdfScale]);
 
+  // Clear preview container when pageCount becomes 0
+  useEffect(() => {
+    if (pageCount === 0 && previewRef.current) {
+      previewRef.current.innerHTML = "";
+    }
+  }, [pageCount]);
+
   const handleRender = useCallback(async () => {
     if (isRenderingRef.current) {
       queuedRenderRef.current = true;
@@ -376,6 +381,7 @@ export default function App() {
       try {
         revokeDownloadUrl();
         lastPdfRef.current = null;
+        pageCountRef.current = 0;
         setPageCount(0);
 
         if (previewRef.current) {
@@ -484,6 +490,7 @@ export default function App() {
     try {
       revokeDownloadUrl();
       lastPdfRef.current = null;
+      pageCountRef.current = 0;
       setPageCount(0);
       const text = await file.text();
       setScript(text);
@@ -566,21 +573,35 @@ export default function App() {
             placeholder="Project title"
             className="w-full max-w-xs rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-center text-sm text-slate-100 shadow-inner focus:border-shapdf-400 focus:outline-none focus:ring-1 focus:ring-shapdf-300"
           />
-          <a
-            href="https://github.com/Teddy-van-Jerry/shapdf"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 transition hover:border-shapdf-400 hover:text-shapdf-200"
-          >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-              <path
-                fillRule="evenodd"
-                d="M12.026 2c-5.509 0-9.974 4.468-9.974 9.98 0 4.41 2.865 8.15 6.839 9.471.5.09.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.153-1.11-1.46-1.11-1.46-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.087 2.91.832.091-.647.35-1.087.636-1.337-2.22-.253-4.555-1.112-4.555-4.946 0-1.092.39-1.987 1.029-2.688-.103-.254-.446-1.274.098-2.655 0 0 .84-.27 2.75 1.026a9.564 9.564 0 0 1 2.504-.337 9.56 9.56 0 0 1 2.503.337c1.91-1.296 2.748-1.026 2.748-1.026.546 1.381.202 2.401.1 2.655.64.701 1.028 1.596 1.028 2.688 0 3.842-2.339 4.69-4.566 4.938.359.31.678.922.678 1.857 0 1.34-.012 2.421-.012 2.749 0 .268.18.576.688.478C19.144 20.126 22 16.387 22 11.978 22 6.468 17.535 2 12.026 2Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>GitHub</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://docs.rs/shapdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 transition hover:border-shapdf-400 hover:text-shapdf-200"
+              title="Rust Documentation"
+            >
+              <svg className="h-4 w-4" viewBox="20 20 104 104" fill="currentColor" aria-hidden>
+                <path d="m71.05 23.68c-26.06 0-47.27 21.22-47.27 47.27s21.22 47.27 47.27 47.27 47.27-21.22 47.27-47.27-21.22-47.27-47.27-47.27zm-.07 4.2a3.1 3.11 0 0 1 3.02 3.11 3.11 3.11 0 0 1 -6.22 0 3.11 3.11 0 0 1 3.2-3.11zm7.12 5.12a38.27 38.27 0 0 1 26.2 18.66l-3.67 8.28c-.63 1.43.02 3.11 1.44 3.75l7.06 3.13a38.27 38.27 0 0 1 .08 6.64h-3.93c-.39 0-.55.26-.55.64v1.8c0 4.24-2.39 5.17-4.49 5.4-2 .23-4.21-.84-4.49-2.06-1.18-6.63-3.14-8.04-6.24-10.49 3.85-2.44 7.85-6.05 7.85-10.87 0-5.21-3.57-8.49-6-10.1-3.42-2.25-7.2-2.7-8.22-2.7h-40.6a38.27 38.27 0 0 1 21.41-12.08l4.79 5.02c1.08 1.13 2.87 1.18 4 .09zm-44.2 23.02a3.1 3.11 0 0 1 3.02 3.11 3.11 3.11 0 0 1 -6.22 0 3.11 3.11 0 0 1 3.2-3.11zm74.15.14a3.11 3.11 0 0 1 3.02 3.11 3.11 3.11 0 0 1 -6.22 0 3.11 3.11 0 0 1 3.2-3.11zm-68.29.5h5.42v24.44h-10.94a38.27 38.27 0 0 1 -1.24-14.61l6.7-2.98c1.43-.64 2.08-2.31 1.44-3.74zm22.62.26h12.91c.67 0 4.71.77 4.71 3.8 0 2.51-3.1 3.41-5.65 3.41h-11.98zm0 17.56h9.89c.9 0 4.83.26 6.08 5.28.39 1.54 1.26 6.56 1.85 8.17.59 1.8 2.98 5.4 5.53 5.4h16.14a38.27 38.27 0 0 1 -3.54 4.1l-6.57-1.41c-1.53-.33-3.04.65-3.37 2.18l-1.56 7.28a38.27 38.27 0 0 1 -31.91-.15l-1.56-7.28c-.33-1.53-1.83-2.51-3.36-2.18l-6.43 1.38a38.27 38.27 0 0 1 -3.32-3.92h31.27c.35 0 .59-.06.59-.39v-11.06c0-.32-.24-.39-.59-.39h-9.15zm-14.43 25.33a3.11 3.11 0 0 1 3.02 3.11 3.11 3.11 0 0 1 -6.22 0 3.11 3.11 0 0 1 3.2-3.11zm46.05.14a3.11 3.11 0 0 1 3.02 3.11 3.11 3.11 0 0 1 -6.22 0 3.11 3.11 0 0 1 3.2-3.11z" />
+              </svg>
+              <span>Docs</span>
+            </a>
+            <a
+              href="https://github.com/Teddy-van-Jerry/shapdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-sm text-slate-200 transition hover:border-shapdf-400 hover:text-shapdf-200"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path
+                  fillRule="evenodd"
+                  d="M12.026 2c-5.509 0-9.974 4.468-9.974 9.98 0 4.41 2.865 8.15 6.839 9.471.5.09.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.153-1.11-1.46-1.11-1.46-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.087 2.91.832.091-.647.35-1.087.636-1.337-2.22-.253-4.555-1.112-4.555-4.946 0-1.092.39-1.987 1.029-2.688-.103-.254-.446-1.274.098-2.655 0 0 .84-.27 2.75 1.026a9.564 9.564 0 0 1 2.504-.337 9.56 9.56 0 0 1 2.503.337c1.91-1.296 2.748-1.026 2.748-1.026.546 1.381.202 2.401.1 2.655.64.701 1.028 1.596 1.028 2.688 0 3.842-2.339 4.69-4.566 4.938.359.31.678.922.678 1.857 0 1.34-.012 2.421-.012 2.749 0 .268.18.576.688.478C19.144 20.126 22 16.387 22 11.978 22 6.468 17.535 2 12.026 2Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </div>
         </div>
       </header>
 

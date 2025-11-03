@@ -1,11 +1,14 @@
 # `shapdf` = `shape` + `pdf`
 Create Shapes into PDF
 
-GitHub: [Teddy-van-Jerry/shapdf](https://github.com/Teddy-van-Jerry/shapdf)
+- **🌐 Try it online:** [shapdf.wqzhao.org](https://shapdf.wqzhao.org)
+- **📚 Documentation:** [docs.rs/shapdf](https://docs.rs/shapdf)
+- **💻 Source:** [github.com/Teddy-van-Jerry/shapdf](https://github.com/Teddy-van-Jerry/shapdf)
 
 ## Motivation
 - Efficient programmable generation of shapes in PDF (rather than slow compilation of LaTeX [Ti*k*Z](https://tikz.dev/) or Typst [CeTZ](https://cetz-package.github.io/));
-- Minimal dependencies in Rust, relying mostly on **PDF primitives**.
+- Minimal dependencies in Rust, relying mostly on **PDF primitives**;
+- A lightweight solution for machine generation of simple graphics.
 
 ## Capabilities
 - [x] Shapes
@@ -13,11 +16,13 @@ GitHub: [Teddy-van-Jerry/shapdf](https://github.com/Teddy-van-Jerry/shapdf)
   - [x] Circle (filled)
   - [x] Rectangle (filled)
   - [ ] Polygon
-  - [ ] Text
+- [ ] Text
 - [x] Color
 - [ ] Opacity
 - [x] Rotation & Anchor
 - [x] PDF Stream Compression (feature `compress`)
+- [x] CLI for declarative scripts
+- [x] WebAssembly
 
 More features are coming soon!
 
@@ -87,10 +92,14 @@ Library consumers can also call `shapdf::render_script_to_pdf(script, output_pat
 - `rectangle <x> <y> <width> <height> [color=...] [anchor=...] [angle=...]`
 - The first drawing command automatically inserts a default page if none was added.
 
-### WebAssembly
+### WebAssembly & Web Editor
+
+**Try the online editor:** [shapdf.wqzhao.org](https://shapdf.wqzhao.org)
+
+**Using WASM in your own project:**
 - Build the library with `--features wasm` to enable `shapdf::render_script_to_bytes(script)` for in-memory rendering.
 - The returned `Vec<u8>` contains the PDF bytes, ready to serve or download in a web context.
-- See [`examples/wasm`](examples/wasm) for a minimal `wasm-bindgen` wrapper that exposes `render_script` to JavaScript and returns PDF bytes ready for download.
+- See [`examples/shapdf.wqzhao.org`](examples/shapdf.wqzhao.org) for the full React/TypeScript web editor implementation.
 
 ## Implementation Facts
 - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).
