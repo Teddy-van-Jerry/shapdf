@@ -6,6 +6,13 @@ authors = ["Teddy van Jerry <me@teddy-van-jerry.org>"]
 license = "GPL-3.0-or-later"
 edition = "2021"
 repository = "https://github.com/Teddy-van-Jerry/shapdf"
+include = [
+    "src/**/*",
+    "Cargo.toml",
+    "pyproject.toml",
+    "tests/**/*",
+    ".gitignore",
+]
 
 [lib]
 name = "pyshapdf"

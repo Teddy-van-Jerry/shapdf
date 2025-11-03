@@ -13,6 +13,7 @@ examples/wasm/pkg
 examples/shapdf.wqzhao.org/src/wasm
 src/wasm
 CLAUDE.local.md
+dist
 
 # Node.js
 node_modules

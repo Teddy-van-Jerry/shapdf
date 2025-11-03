@@ -57,7 +57,10 @@ jobs:
 
       - name: Build Python package
         working-directory: ./python
-        run: maturin develop --release
+        run: maturin build --release --out ../dist
+
+      - name: Install Python package
+        run: pip install dist/*.whl
 
       - name: Run tests
         working-directory: ./python
