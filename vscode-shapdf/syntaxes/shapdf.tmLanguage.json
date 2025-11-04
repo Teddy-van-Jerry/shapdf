@@ -1,0 +1,132 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "shapdf",
+  "scopeName": "source.shapdf",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#set-command"
+    },
+    {
+      "include": "#page-command"
+    },
+    {
+      "include": "#shape-commands"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.shapdf",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "set-command": {
+      "patterns": [
+        {
+          "match": "^\\s*(set)\\s+(default_page_size|default_color|default_width|default_cap|default_angle|default_anchor)\\s+",
+          "captures": {
+            "1": {
+              "name": "keyword.control.shapdf"
+            },
+            "2": {
+              "name": "variable.parameter.shapdf"
+            }
+          }
+        }
+      ]
+    },
+    "page-command": {
+      "patterns": [
+        {
+          "match": "^\\s*(page)\\s+(default|letter|legal|a4|a3|a5|tabloid|\\d+(?:mm|cm|in|pt)?\\s+\\d+(?:mm|cm|in|pt)?)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.shapdf"
+            },
+            "2": {
+              "name": "constant.language.shapdf"
+            }
+          }
+        }
+      ]
+    },
+    "shape-commands": {
+      "patterns": [
+        {
+          "begin": "^\\s*(line|circle|rectangle)\\s+",
+          "end": "$",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.shapdf"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#parameters"
+            },
+            {
+              "include": "#measurements"
+            },
+            {
+              "include": "#colors"
+            }
+          ]
+        }
+      ]
+    },
+    "parameters": {
+      "patterns": [
+        {
+          "match": "\\b(width|color|cap|anchor|angle)=",
+          "name": "variable.parameter.shapdf"
+        },
+        {
+          "match": "\\b(round|square|butt)\\b",
+          "name": "constant.language.cap.shapdf"
+        },
+        {
+          "match": "\\b(center|north|south|east|west|northeast|northwest|southeast|southwest)\\b",
+          "name": "constant.language.anchor.shapdf"
+        }
+      ]
+    },
+    "measurements": {
+      "patterns": [
+        {
+          "match": "\\b\\d+(?:\\.\\d+)?\\s*(mm|cm|in|pt|deg|rad)\\b",
+          "name": "constant.numeric.measurement.shapdf",
+          "captures": {
+            "1": {
+              "name": "keyword.other.unit.shapdf"
+            }
+          }
+        },
+        {
+          "match": "\\b\\d+(?:\\.\\d+)?\\b",
+          "name": "constant.numeric.shapdf"
+        }
+      ]
+    },
+    "colors": {
+      "patterns": [
+        {
+          "match": "#[0-9a-fA-F]{6}\\b",
+          "name": "constant.other.color.hex.shapdf"
+        },
+        {
+          "match": "\\b(rgb|gray)\\s*\\(",
+          "name": "support.function.color.shapdf"
+        },
+        {
+          "match": "\\b(red|green|blue|yellow|cyan|magenta|white|black|orange|purple|pink|brown|gray|grey)\\b",
+          "name": "constant.other.color.named.shapdf"
+        }
+      ]
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {
 } from "react";
 import initWasm, { render_script } from "./wasm/shapdf_wasm_example.js";
 import MonacoEditor from "@monaco-editor/react";
+import { registerShapdfLanguage } from "./shapdfLanguage";
 
 type PdfJsModule = typeof import("pdfjs-dist");
 type PDFDocumentProxy = import("pdfjs-dist").PDFDocumentProxy;
@@ -678,8 +679,8 @@ export default function App() {
             <div className="flex-1 overflow-hidden rounded-xl border border-slate-800 shadow-inner">
               <MonacoEditor
                 height="100%"
-                language="plaintext"
-                theme="vs-dark"
+                language="shapdf"
+                theme="shapdf-dark"
                 value={script}
                 onChange={(value) => handleScriptChange(value || '')}
                 options={{
@@ -706,10 +707,28 @@ export default function App() {
                   },
                 }}
                 beforeMount={(monaco) => {
+                  // Register shapdf language with syntax highlighting
+                  registerShapdfLanguage(monaco);
+
+                  // Override theme colors to match app style - desaturated color scheme
                   monaco.editor.defineTheme('shapdf-dark', {
                     base: 'vs-dark',
                     inherit: true,
-                    rules: [],
+                    rules: [
+                      { token: 'comment.line.number-sign.shapdf', foreground: '6b7280', fontStyle: 'italic' },
+                      { token: 'keyword.control.shapdf', foreground: '8b7db8', fontStyle: 'bold' },
+                      { token: 'entity.name.function.shapdf', foreground: '6b9dd4', fontStyle: 'bold' },
+                      { token: 'variable.parameter.shapdf', foreground: 'd4a574' },
+                      { token: 'constant.language.shapdf', foreground: '9d8bc7' },
+                      { token: 'constant.language.cap.shapdf', foreground: '9d8bc7' },
+                      { token: 'constant.language.anchor.shapdf', foreground: '9d8bc7' },
+                      { token: 'constant.numeric.shapdf', foreground: 'd4956b' },
+                      { token: 'constant.numeric.measurement.shapdf', foreground: 'd4956b' },
+                      { token: 'constant.other.color.hex.shapdf', foreground: '6dac8f' },
+                      { token: 'constant.other.color.named.shapdf', foreground: '6dac8f' },
+                      { token: 'support.function.color.shapdf', foreground: '5a9478' },
+                      { token: 'keyword.other.unit.shapdf', foreground: 'd4956b' },
+                    ],
                     colors: {
                       'editor.background': '#020617',
                       'editor.lineHighlightBackground': '#1e293b',

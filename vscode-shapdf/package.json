@@ -1,0 +1,133 @@
+{
+  "name": "shapdf",
+  "displayName": "shapdf",
+  "description": "Syntax highlighting and PDF preview for shapdf files",
+  "version": "0.2.1",
+  "publisher": "teddy-van-jerry",
+  "icon": "images/shapdf-icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "shapdf",
+    "pdf",
+    "shapes",
+    "graphics"
+  ],
+  "activationEvents": [
+    "onLanguage:shapdf"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "shapdf",
+        "aliases": [
+          "shapdf",
+          "ShaPDF"
+        ],
+        "extensions": [
+          ".shapdf"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/shapdf-icon.png",
+          "dark": "./images/shapdf-icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "shapdf",
+        "scopeName": "source.shapdf",
+        "path": "./syntaxes/shapdf.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "shapdf.preview",
+        "title": "Open PDF Preview",
+        "category": "shapdf",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "shapdf.previewToSide",
+        "title": "Open PDF Preview to the Side",
+        "category": "shapdf",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "shapdf.previewToSide",
+          "when": "editorLangId == shapdf",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "shapdf.preview",
+          "when": "editorLangId == shapdf",
+          "group": "shapdf"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "shapdf.preview",
+          "when": "editorLangId == shapdf"
+        },
+        {
+          "command": "shapdf.previewToSide",
+          "when": "editorLangId == shapdf"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "shapdf.previewToSide",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "editorLangId == shapdf"
+      }
+    ],
+    "configuration": {
+      "title": "shapdf",
+      "properties": {
+        "shapdf.cliPath": {
+          "type": "string",
+          "default": "shapdf",
+          "description": "Path to the shapdf CLI executable. Defaults to 'shapdf' (assumes it's in PATH)."
+        },
+        "shapdf.autoPreview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically update preview when document is saved."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wqz/shapdf"
+  },
+  "license": "GPL-3.0-or-later"
+}

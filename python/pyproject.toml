@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "pyshapdf"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python bindings for shapdf - Create Shapes into PDF"
 authors = [
     {name = "Teddy van Jerry", email = "me@teddy-van-jerry.org"}
