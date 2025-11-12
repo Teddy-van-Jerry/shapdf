@@ -88,9 +88,9 @@ impl<'a> Shape<'a> {
                 .cap_type
                 .unwrap_or(*DEFAULT_CAP_TYPE.lock().unwrap())
                 .to_int();
-            content.extend_from_slice(format!("{} {} {} RG\n", r, g, b).as_bytes());
             match self.enum_type {
                 ShapeType::Line => {
+                    content.extend_from_slice(format!("{} {} {} RG\n", r, g, b).as_bytes());
                     content.extend_from_slice(
                         format!(
                             "{} w\n{} J\n{} {} m\n{} {} l\nS\n",
@@ -99,19 +99,23 @@ impl<'a> Shape<'a> {
                         .as_bytes(),
                     );
                 }
-                ShapeType::Circle => content.extend_from_slice(
-                    // Ref: https://stackoverflow.com/a/46897816/15080514
-                    format!(
-                        "{} w\n1 J\n{} {} m\n{} {} l\nS\n",
-                        self.radius.unwrap() * 2.0,
-                        self.x[0],
-                        self.y[0],
-                        self.x[0],
-                        self.y[0]
-                    )
-                    .as_bytes(),
-                ),
+                ShapeType::Circle => {
+                    content.extend_from_slice(format!("{} {} {} RG\n", r, g, b).as_bytes());
+                    content.extend_from_slice(
+                        // Ref: https://stackoverflow.com/a/46897816/15080514
+                        format!(
+                            "{} w\n1 J\n{} {} m\n{} {} l\nS\n",
+                            self.radius.unwrap() * 2.0,
+                            self.x[0],
+                            self.y[0],
+                            self.x[0],
+                            self.y[0]
+                        )
+                        .as_bytes(),
+                    );
+                }
                 ShapeType::Rectangle => {
+                    content.extend_from_slice(format!("{} {} {} rg\n", r, g, b).as_bytes());
                     let angle = self.angle.unwrap_or(*DEFAULT_ANGLE.lock().unwrap());
                     let cos_theta = angle.cos();
                     let sin_theta = angle.sin();
