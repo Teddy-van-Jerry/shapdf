@@ -11,7 +11,6 @@ include = [
     "src/**/*",
     "Cargo.toml",
     "pyproject.toml",
-    "README.md",
     "tests/**/*",
     ".gitignore",
 ]

@@ -6,7 +6,7 @@ build-backend = "maturin"
 name = "pyshapdf"
 version = "0.2.1"
 description = "Python bindings for shapdf - Create Shapes into PDF"
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 authors = [
     {name = "Teddy van Jerry", email = "me@teddy-van-jerry.org"}
 ]
