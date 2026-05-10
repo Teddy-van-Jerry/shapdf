@@ -127,6 +127,10 @@ See [`python/README.md`](python/README.md) for full documentation, examples, and
 ## Implementation Facts
 - Filled circle is actually implemented using [a zero-length line with the rounded line cap](https://stackoverflow.com/a/46897816/15080514).
 
+## Research Applications
+
+- Split ring resonator pattern generation in [**MetaPolar: A Low-Cost, Passive, mmWave Radar-Readable Metasurface Road Sign**](https://dl.acm.org/doi/10.1145/3774906.3800464) *(SenSys '26)*.
+
 ## License
 This project is distributed under the [GPL-3.0 License](LICENSE).
 
