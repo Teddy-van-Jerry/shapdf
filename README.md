@@ -134,4 +134,4 @@ See [`python/README.md`](python/README.md) for full documentation, examples, and
 ## License
 This project is distributed under the [GPL-3.0 License](LICENSE).
 
-© 2025 [Teddy van Jerry](https://github.com/Teddy-van-Jerry) ([Wuqiong Zhao](https://wqzhao.org))
+© 2025-2026 [Teddy van Jerry](https://github.com/Teddy-van-Jerry) ([Wuqiong Zhao](https://wqzhao.org))
